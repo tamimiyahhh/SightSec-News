@@ -53,6 +53,8 @@ Backend (Node + Express) ──REST──► GNews API        (news search)
 ```
 news-aggregator/
 ├── backend/
+│   ├── api/
+│   │   └── [...path].js      Vercel serverless entry point
 │   ├── server.js              Express app, CORS, health check, error handler
 │   ├── routes/
 │   │   ├── news.js            GET /api/news (GNews proxy + 5 min cache)
@@ -186,8 +188,12 @@ Without `q` or `category`, results default to the cybersecurity query. Results a
 
 ## Deployment
 
-- **Frontend** (Vercel, Netlify, or any static host): build from `frontend/` and set `VITE_API_URL`, `VITE_SUPABASE_URL`, and `VITE_SUPABASE_ANON_KEY` as build-time environment variables.
-- **Backend** (Render, Railway, or any Node host): deploy `backend/` as its own project, set the backend environment variables, and set `CORS_ORIGIN` to the deployed frontend URL.
+Deploy the frontend and backend as **two separate Vercel projects** from this repository:
+
+1. **Frontend project:** set Root Directory to `frontend`. Use the Vite framework preset, build command `npm run build`, and output directory `dist`. Set `VITE_API_URL` to the deployed backend origin (for example, `https://your-api.vercel.app`), plus `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+2. **Backend project:** create a second Vercel project from the same repository and set Root Directory to `backend`. Set the framework preset to **Other**, leave Build Command and Output Directory unset, and set `GNEWS_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `CORS_ORIGIN` (the deployed frontend origin, for example, `https://your-app.vercel.app`).
+
+Run `supabase.sql` in the Supabase SQL Editor. Add the deployed frontend URL to Supabase Authentication's Site URL and allowed redirect URLs. Redeploy the frontend after setting `VITE_API_URL`.
 
 ## Security notes
 
