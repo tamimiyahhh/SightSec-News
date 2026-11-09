@@ -1,1 +1,220 @@
-# SightSec-News
+# SightSec News
+
+A cybersecurity news portal. Search and filter live headlines, read quick summaries, and save articles to a personal favorites list that follows you across devices.
+
+> The repository folder is named `cyberwatch-news-aggregator`; the app's user-facing name is **SightSec News**.
+
+## How it works
+
+Three systems exchange data over REST:
+
+```
+Frontend (React + Vite + Bootstrap)
+        │  REST (/api/*)
+        ▼
+Backend (Node + Express) ──REST──► GNews API        (news search)
+        │
+        └──────────────REST──────► Supabase         (auth + favorites, row-level security)
+```
+
+- The browser never sees the GNews API key; all news requests go through the backend.
+- Favorites require a logged-in user. The frontend sends the Supabase session token, and the backend verifies it before reading or writing favorites.
+
+## Features
+
+**News**
+- Keyword search (e.g. `ransomware`, `zero-day`, `phishing`)
+- Topic filter: Cybersecurity, AI, Technology, Malware, Data Privacy
+- Advanced filters: topic, event country (38 countries), and publisher
+- Cards with headline, source, publish date, and image
+- Details popup with a summary and an "Open Full Article" link
+- Pagination with click-to-jump page numbers (up to 100 pages)
+- Recent search history stored in the browser
+
+**Accounts and favorites**
+- Username + password sign-up and login (no email collected)
+- Save and remove favorites; they sync across devices
+- Each account can only access its own favorites (enforced by Supabase row-level security)
+
+**Interface**
+- Light and dark themes with a saved preference (dark by default)
+- Responsive layout for phones, tablets, and desktops
+
+## Tech stack
+
+| Layer | Tools |
+|---|---|
+| Frontend | React 18, Vite 5, Bootstrap 5, Axios, `@supabase/supabase-js` |
+| Backend | Node.js 18+, Express 4, Axios, CORS, dotenv |
+| Data | GNews API (articles), Supabase Postgres + Auth (favorites, accounts) |
+
+## Folder structure
+
+```
+news-aggregator/
+├── backend/
+│   ├── server.js              Express app, CORS, health check, error handler
+│   ├── routes/
+│   │   ├── news.js            GET /api/news (GNews proxy + 5 min cache)
+│   │   └── favorites.js       GET / POST / DELETE favorites (auth required)
+│   ├── middleware/
+│   │   └── requireAuth.js     Verifies the Supabase bearer token
+│   ├── services/
+│   │   └── favoritesStore.js  Favorites data access
+│   └── .env.example
+├── frontend/
+│   ├── index.html
+│   ├── vite.config.js         Dev server on :3000, proxies /api to :5000
+│   ├── public/                Static assets (logo)
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx            Navbar, theme, auth state, favorites state
+│       ├── api.js             Axios client and authenticated requests
+│       ├── supabase.js        Supabase client
+│       ├── styles.css         Theme variables and component styles
+│       ├── pages/             Home.jsx, Favorites.jsx
+│       └── components/        NewsCard.jsx, ArticleModal.jsx, AuthPanel.jsx
+├── supabase.sql               Favorites table + row-level security policies
+└── README.md
+```
+
+## Getting started
+
+### Prerequisites
+- Node.js 18 or newer
+- A free API key from [gnews.io](https://gnews.io)
+- A [Supabase](https://supabase.com) project (see [Supabase setup](#supabase-setup))
+
+### 1. Backend
+
+```bash
+cd backend
+cp .env.example .env     # then fill in the values below
+npm install
+npm start                # http://localhost:5000
+```
+
+Use `npm run dev` for auto-restart on file changes.
+
+### 2. Frontend
+
+Create `frontend/.env` with your Supabase values (see the table below), then:
+
+```bash
+cd frontend
+npm install
+npm start                # http://localhost:3000
+```
+
+The dev server proxies `/api/*` to the backend, so no extra configuration is needed locally.
+
+### Environment variables
+
+**Backend (`backend/.env`)**
+
+| Variable | Required | Description |
+|---|---|---|
+| `GNEWS_API_KEY` | Yes | Your GNews API key |
+| `PORT` | No | Server port (default `5000`) |
+| `SUPABASE_URL` | Yes | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Yes | Supabase publishable/anon key. Never use the service-role key |
+| `CORS_ORIGIN` | Production | Frontend URL allowed to call the API (defaults to allow all, so set this when deployed) |
+
+**Frontend (`frontend/.env`)**
+
+| Variable | Required | Description |
+|---|---|---|
+| `VITE_SUPABASE_URL` | Yes | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Yes | Supabase publishable/anon key (public by design) |
+| `VITE_API_URL` | Production | Deployed backend URL. Leave empty locally to use the Vite proxy |
+
+### Scripts
+
+| Where | Command | Purpose |
+|---|---|---|
+| `backend/` | `npm start` | Run the API |
+| `backend/` | `npm run dev` | Run the API with auto-restart |
+| `frontend/` | `npm start` / `npm run dev` | Start the Vite dev server |
+| `frontend/` | `npm run build` | Production build into `frontend/dist` |
+| `frontend/` | `npm run preview` | Preview the production build |
+
+## Supabase setup
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open the SQL Editor and run `supabase.sql`. It creates the `favorites` table, a unique index on `(user_id, url)`, and row-level security policies so each account can only read, add, update, and delete its own rows.
+3. Under **Authentication → Providers**, keep **Email** enabled and turn **Confirm email** off. The app maps each username to a non-deliverable internal address, so confirmation emails can never be delivered.
+4. If available, set the password policy to at least 12 characters with uppercase, lowercase, numbers, and symbols.
+5. Copy the project URL and publishable/anon key into both `.env` files (see above).
+
+### Account rules
+- Usernames are 3–32 letters, numbers, underscores, or hyphens, and are case-insensitive.
+- New passwords need at least 12 characters, with an uppercase letter, a lowercase letter, a number, and a symbol. Login still accepts existing passwords.
+- **No email is collected, so there is no password reset or email verification.** Add a separate account-recovery process before using this in production.
+
+## API reference
+
+Base URL: `http://localhost:5000` locally.
+
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| GET | `/api/health` | No | Status, whether GNews and Supabase are configured |
+| GET | `/api/news` | No | Search and filter news (proxied to GNews) |
+| GET | `/api/news/categories` | No | List available category ids |
+| GET | `/api/favorites` | Bearer token | List the current user's favorites |
+| POST | `/api/favorites` | Bearer token | Save an article |
+| DELETE | `/api/favorites/:id` | Bearer token | Remove a favorite |
+
+**`GET /api/news` query parameters**
+
+| Parameter | Description |
+|---|---|
+| `q` | Keyword search |
+| `category` | One of `cybersecurity`, `ai`, `technology`, `malware`, `privacy` |
+| `eventCountry` | Country name matched against article text (letters, spaces, `. ' -` only) |
+| `page` | Page number, starting at 1 |
+| `pageSize` | Results per page, max 10 |
+
+Without `q` or `category`, results default to the cybersecurity query. Results are sorted by relevance when `q` is set, otherwise by publish date.
+
+**`POST /api/favorites` body**
+
+```json
+{ "title": "…", "url": "https://…", "source": "…", "image": "https://…", "published_at": "2026-11-09T10:00:00Z" }
+```
+
+`title` and `url` are required. Authenticated routes expect `Authorization: Bearer <supabase access token>`.
+
+## Deployment
+
+- **Frontend** (Vercel, Netlify, or any static host): build from `frontend/` and set `VITE_API_URL`, `VITE_SUPABASE_URL`, and `VITE_SUPABASE_ANON_KEY` as build-time environment variables.
+- **Backend** (Render, Railway, or any Node host): deploy `backend/` as its own project, set the backend environment variables, and set `CORS_ORIGIN` to the deployed frontend URL.
+
+## Security notes
+
+- Never commit `.env` files. Check that `.gitignore` excludes them before pushing, and if a key was ever shared (including inside a zip), rotate it in GNews or Supabase.
+- Only the Supabase **anon/publishable** key belongs in this project. Row-level security is what protects user data.
+- Set `CORS_ORIGIN` in production rather than leaving the API open to all origins.
+
+## Limitations
+
+- GNews plan limits apply to request quotas, result counts, and article freshness. Check the limits on your account.
+- The backend caches news responses in memory for 5 minutes to save quota. The cache resets on restart and is not shared across instances.
+- The event-country filter searches for the country name in article text. It does not verify where an event happened.
+- The publisher filter only filters the currently loaded page of results.
+- Favorites require Supabase; the old shared local JSON store is not account-protected.
+
+## Roadmap
+
+Planned front-end improvements:
+
+- Visible category chips and removable active-filter chips
+- Skeleton loading cards, retry on errors, and friendlier empty states
+- Card redesign (featured first result, title clamping, relative timestamps, bookmark icon)
+- Favorites page as a card grid
+- Accessible article modal (dialog role, Escape to close, focus trap)
+- Search, category, and page reflected in the URL
+- Consistent branding and a distinct accent color in both themes
+
+## Credits
+
+News data from [GNews](https://gnews.io).
