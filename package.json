@@ -1,0 +1,11 @@
+{
+  "name": "sightsec-news",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace cyber-news-frontend"
+  }
+}

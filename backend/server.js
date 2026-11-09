@@ -32,9 +32,13 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || "Server error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-  if (!process.env.GNEWS_API_KEY) {
-    console.warn("WARNING: GNEWS_API_KEY is not set. Copy .env.example to .env");
-  }
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Backend running on http://localhost:${PORT}`);
+    if (!process.env.GNEWS_API_KEY) {
+      console.warn("WARNING: GNEWS_API_KEY is not set. Copy .env.example to .env");
+    }
+  });
+}
+
+module.exports = app;
