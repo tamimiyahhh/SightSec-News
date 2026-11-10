@@ -446,89 +446,13 @@ body {
   border-color: var(--app-border);
 }
 
-.submission-page {
-  max-width: 960px;
-}
-
-.submission-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--app-border);
-}
-
-.submission-eyebrow,
-.submission-part-label {
-  color: var(--app-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.submission-eyebrow {
-  margin-bottom: 0.45rem;
-}
-
-.submission-progress {
-  display: flex;
-  min-width: 6rem;
-  flex-direction: column;
-  align-items: flex-end;
-  color: var(--app-text);
-}
-
-.submission-progress strong {
-  font-size: 1.25rem;
-}
-
-.submission-progress span,
-.submission-save-status {
-  color: var(--app-muted);
-  font-size: 0.8rem;
-}
-
-.submission-save-status {
-  margin: -0.5rem 0 1rem;
-  text-align: right;
-}
-
-.submission-sections {
-  display: grid;
-  gap: 1rem;
-}
-
-.submission-card {
-  padding: 1.25rem;
-  color: var(--app-text);
-  background: var(--app-surface);
-  border: 1px solid var(--app-border);
-  border-radius: 0.6rem;
-}
-
-.submission-card-heading {
-  display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr);
-  gap: 0.75rem;
-}
-
-.submission-part-label {
-  padding-top: 0.2rem;
-}
-
-.submission-prompts {
-  display: grid;
-  gap: 0.4rem;
-  padding-left: 1.1rem;
-  margin: 1rem 0;
-  color: var(--app-muted);
-  font-size: 0.9rem;
-}
-
-.submission-textarea {
-  min-height: 7rem;
-  resize: vertical;
+.submission-portfolio-frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 57px);
+  height: calc(100dvh - 57px);
+  min-height: 480px;
+  border: 0;
 }
 
 .modal-content {
@@ -576,24 +500,6 @@ body {
   .navbar-brand {
     margin-right: 0;
     font-size: 1rem;
-  }
-
-  .submission-header {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .submission-progress {
-    align-items: flex-start;
-  }
-
-  .submission-card {
-    padding: 1rem;
-  }
-
-  .submission-card-heading {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
   }
 
   .navbar .d-flex.gap-2 {

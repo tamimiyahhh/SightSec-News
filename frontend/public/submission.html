@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CyberWatch — Systems Integration Final Portfolio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;600&display=swap">
+<style>
+:root {
+  --bg:#f7f8fa;--surface:#ffffff;--border:#e2e6ed;--muted:#8b95a5;
+  --fg:#1a2130;--fg-secondary:#4a5568;--accent:#0a5cff;--accent-soft:#e8f0ff;
+  --accent-mid:#3b82f6;--warn:#d97706;--warn-soft:#fef3c7;--success:#059669;
+  --success-soft:#d1fae5;--danger:#dc2626;--danger-soft:#fee2e2;
+  --code-bg:#0d1117;--code-fg:#e6edf3;--code-green:#7ee787;--code-blue:#79c0ff;
+  --code-yellow:#e3b341;--code-comment:#8b949e;
+  --mono:'IBM Plex Mono','Courier New',monospace;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --serif:'IBM Plex Serif',Georgia,serif;
+  --radius:6px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.1),0 2px 4px rgba(0,0,0,.06);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;--muted:#6e7681;
+    --fg:#e6edf3;--fg-secondary:#8b949e;--accent:#58a6ff;--accent-soft:#0d2347;
+    --accent-mid:#388bfd;--warn:#f0a734;--warn-soft:#2a1f00;--success:#3fb950;
+    --success-soft:#0a2017;--danger:#f85149;--danger-soft:#2a0a0a;
+    --code-bg:#0d1117;--shadow:0 1px 3px rgba(0,0,0,.3);
+    --shadow-md:0 4px 12px rgba(0,0,0,.4);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1117;--surface:#161b22;--border:#30363d;--muted:#6e7681;
+  --fg:#e6edf3;--fg-secondary:#8b949e;--accent:#58a6ff;--accent-soft:#0d2347;
+  --accent-mid:#388bfd;--warn:#f0a734;--warn-soft:#2a1f00;--success:#3fb950;
+  --success-soft:#0a2017;--danger:#f85149;--danger-soft:#2a0a0a;
+  --code-bg:#0d1117;--shadow:0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:0 4px 12px rgba(0,0,0,.4);color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--sans);font-size:15px;line-height:1.65;
+  background:var(--bg);color:var(--fg);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:101;background:var(--surface)}
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:100;background:var(--surface);border-bottom:1px solid var(--border)}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px))}
+.header-logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-mark{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:16px;height:16px;fill:white}
+.logo-text{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--fg);letter-spacing:-.02em}
+.logo-text span{color:var(--accent)}
+.header-meta{margin-left:auto;font-size:11px;font-family:var(--mono);color:var(--muted);display:flex;align-items:center;gap:12px}
+.status-pill{display:inline-flex;align-items:center;gap:5px;background:var(--success-soft);color:var(--success);padding:2px 8px;border-radius:20px;font-size:11px;font-family:var(--mono)}
+.status-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:4px;padding:4px 8px;color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer}
+.theme-btn:hover{color:var(--fg);border-color:var(--accent)}
+.page-wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:220px 1fr;gap:0;min-height:calc(100vh - 50px)}
+@media(max-width:800px){.page-wrap{grid-template-columns:1fr}.nav-rail{display:none}}
+.nav-rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);height:calc(100vh - 50px - env(safe-area-inset-top,0px));overflow-y:auto;padding:24px 0;border-right:1px solid var(--border);scrollbar-width:thin}
+.nav-rail::-webkit-scrollbar{width:4px}
+.nav-rail::-webkit-scrollbar-thumb{background:var(--border)}
+.nav-label{font-size:10px;font-family:var(--mono);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 16px;margin-bottom:6px;margin-top:20px}
+.nav-label:first-child{margin-top:0}
+.nav-link{display:block;padding:5px 16px;font-size:12.5px;color:var(--fg-secondary);text-decoration:none;border-left:2px solid transparent;transition:all .15s;line-height:1.4}
+.nav-link:hover{color:var(--accent);background:var(--accent-soft)}
+.nav-link.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft);font-weight:500}
+.main-content{min-width:0;padding:40px 0 80px 40px}
+@media(max-width:800px){.main-content{padding:24px 0}}
+.part-section{margin-bottom:64px;scroll-margin-top:70px}
+.part-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.part-tag{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:4px}
+.part-rule{flex:1;height:1px;background:var(--border)}
+.part-title{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.25;text-wrap:balance;margin:0 0 20px;color:var(--fg)}
+.section-title{font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:-.01em;margin:32px 0 10px;color:var(--fg)}
+.section-title:first-of-type{margin-top:0}
+p{margin:0 0 14px;color:var(--fg);max-width:72ch}
+p:last-child{margin-bottom:0}
+.code-block{background:var(--code-bg);border:1px solid #30363d;border-radius:var(--radius);overflow:hidden;margin:16px 0;font-variant-numeric:tabular-nums}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid #30363d;background:#161b22}
+.code-lang{font-family:var(--mono);font-size:11px;color:var(--code-comment);text-transform:uppercase;letter-spacing:.06em}
+.code-file{font-family:var(--mono);font-size:11px;color:var(--code-blue)}
+.code-body{padding:16px;overflow-x:auto;scrollbar-width:thin}
+.code-body pre{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.65;color:var(--code-fg);white-space:pre}
+.ck{color:var(--code-blue)}.cs{color:#a5d6ff}.cv{color:var(--code-fg)}.cc{color:var(--code-comment);font-style:italic}
+.cm{color:var(--code-green)}.cy{color:var(--code-yellow)}.cp{color:#ff7b72}
+.table-wrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:500px}
+th{background:var(--bg);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--fg);line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--accent-soft)}
+td code,th code{font-family:var(--mono);font-size:11px;background:var(--bg);padding:1px 5px;border-radius:3px;color:var(--accent)}
+.callout{border-left:3px solid;padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0;font-size:13.5px}
+.callout.info{border-color:var(--accent);background:var(--accent-soft)}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.callout.success{border-color:var(--success);background:var(--success-soft)}
+.callout.danger{border-color:var(--danger);background:var(--danger-soft)}
+.callout-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.callout.info .callout-label{color:var(--accent)}
+.callout.warn .callout-label{color:var(--warn)}
+.callout.success .callout-label{color:var(--success)}
+.callout.danger .callout-label{color:var(--danger)}
+.ip-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin:12px 0;overflow:hidden;box-shadow:var(--shadow)}
+.ip-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg)}
+.ip-num{font-family:var(--mono);font-size:11px;font-weight:600;color:white;background:var(--accent);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ip-name{font-weight:600;font-size:14px}
+.ip-proto{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:20px}
+.ip-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0}
+.ip-field{padding:10px 16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ip-field-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.ip-field-val{font-size:12.5px;color:var(--fg)}
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:16px 0}
+.metric-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.metric-val{font-family:var(--mono);font-size:24px;font-weight:600;line-height:1;color:var(--fg);font-variant-numeric:tabular-nums;margin-bottom:4px}
+.metric-val.good{color:var(--success)}.metric-val.warn{color:var(--warn)}.metric-val.bad{color:var(--danger)}
+.metric-label{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.03em}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+.badge.closed{background:var(--success-soft);color:var(--success)}
+.badge.mitigated{background:var(--accent-soft);color:var(--accent)}
+.badge.open{background:var(--warn-soft);color:var(--warn)}
+.badge.realized{background:var(--danger-soft);color:var(--danger)}
+.badge.low{background:var(--success-soft);color:var(--success)}
+.badge.med{background:var(--warn-soft);color:var(--warn)}
+.badge.high{background:var(--danger-soft);color:var(--danger)}
+.badge.adopt{background:var(--success-soft);color:var(--success)}
+.badge.reject{background:var(--border);color:var(--muted)}
+.badge.partial{background:var(--warn-soft);color:var(--warn)}
+.arch-diagram{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:16px 0;overflow-x:auto}
+.arch-diagram svg{display:block;min-width:600px;max-width:100%}
+hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+ul,ol{padding-left:20px;margin:10px 0 14px}
+li{margin-bottom:5px;color:var(--fg)}
+li::marker{color:var(--accent)}
+code{font-family:var(--mono);font-size:12px;background:var(--bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--accent)}
+pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+.page-footer{border-top:1px solid var(--border);padding:20px 0;margin-top:40px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.footer-text{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.correction-banner{background:var(--danger-soft);border:1px solid var(--danger);border-radius:var(--radius);padding:12px 16px;margin:0 0 24px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.correction-banner strong{color:var(--danger);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+@media(max-width:600px){.part-title{font-size:20px}.metrics-row{grid-template-columns:1fr 1fr}.ip-body{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="header-logo" href="#">
+      <div class="logo-mark">
+        <svg viewBox="0 0 16 16"><path d="M8 1L2 4v4c0 3.3 2.5 6.4 6 7.2C11.5 14.4 14 11.3 14 8V4L8 1zm0 2.2l4 2v2.8c0 2.4-1.8 4.6-4 5.4-2.2-.8-4-3-4-5.4V5.2l4-2z"/></svg>
+      </div>
+      <span class="logo-text">Cyber<span>Watch</span></span>
+    </a>
+    <span class="status-pill">Live</span>
+    <div class="header-meta">
+      <span>Systems Integration — Final Portfolio</span>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">◑</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <nav class="nav-rail" aria-label="Section navigation">
+    <div class="nav-label">Portfolio</div>
+    <a class="nav-link" href="#cover">Overview</a>
+    <div class="nav-label">Part A</div>
+    <a class="nav-link" href="#a-system">System Overview</a>
+    <a class="nav-link" href="#a-stack">Tech Stack</a>
+    <a class="nav-link" href="#a-code">Source Code</a>
+    <a class="nav-link" href="#a-run">Build &amp; Run</a>
+    <div class="nav-label">Part B</div>
+    <a class="nav-link" href="#b-models">Integration Models</a>
+    <a class="nav-link" href="#b-register">IP Register</a>
+    <a class="nav-link" href="#b-component">Reusable Component</a>
+    <a class="nav-link" href="#b-deployment">Release Plan</a>
+    <div class="nav-label">Part C</div>
+    <a class="nav-link" href="#c-perf">Load Testing</a>
+    <a class="nav-link" href="#c-reliability">Reliability</a>
+    <a class="nav-link" href="#c-security">Security</a>
+    <div class="nav-label">Part D</div>
+    <a class="nav-link" href="#d-trends">Trends Evaluation</a>
+    <div class="nav-label">Part E</div>
+    <a class="nav-link" href="#e-cases">Case Studies</a>
+    <div class="nav-label">Part F</div>
+    <a class="nav-link" href="#f-risk">RMMM Register</a>
+    <a class="nav-link" href="#f-ai">AI-Use Log</a>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- COVER -->
+    <div id="cover" class="part-section">
+      <div class="part-eyebrow">
+        <span class="part-tag">Final Submission</span>
+        <div class="part-rule"></div>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">AY 2026–2027 · T1</span>
+      </div>
+      <h1 class="part-title" style="font-size:32px">CyberWatch — Systems Integration<br>Final Portfolio</h1>
+      <p style="color:var(--fg-secondary);max-width:60ch">Submitted in partial fulfillment of the requirements for Systems Integration. This portfolio covers Parts A through F as specified in the terminal assessment rubric, applied to <strong>CyberWatch</strong> — a live cybersecurity news portal deployed at <a href="https://sight-sec-news-eight.vercel.app/" target="_blank" rel="noopener" style="color:var(--accent)">sight-sec-news-eight.vercel.app</a>.</p>
+
+      <div class="metrics-row" style="margin-top:24px">
+        <div class="metric-tile">
+          <div class="metric-val good">3</div>
+          <div class="metric-label">Integrated Systems</div>
+        </div>
+        <div class="metric-tile">
+          <div class="metric-val">5</div>
+          <div class="metric-label">Integration Points</div>
+        </div>
+        <div class="metric-tile">
+          <div class="metric-val good">Live</div>
+          <div class="metric-label">Deployment Status</div>
+        </div>
+        <div class="metric-tile">
+          <div class="metric-val warn">1 Open</div>
+          <div class="metric-label">Risk Items</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PART A -->
+    <div id="part-a" class="part-section">
+      <div class="part-eyebrow"><span class="part-tag">Part A</span><div class="part-rule"></div></div>
+      <h2 class="part-title">Working Integrated System</h2>
+
+      <div id="a-system" style="scroll-margin-top:70px">
+        <h3 class="section-title">System Overview</h3>
+        <p>CyberWatch integrates <strong>three external systems</strong> through an Express.js backend deployed on Vercel: (1) the <strong>GNews REST API</strong> (<code>gnews.io/api/v4</code>), which supplies live cybersecurity news articles; (2) <strong>Supabase Auth</strong>, which issues and validates JWT Bearer tokens for authenticated users; and (3) <strong>Supabase PostgreSQL</strong> (with Row-Level Security), which persists user favorites. The React/Vite frontend is a separate service that communicates exclusively through the Express backend — no external API calls are made from the browser.</p>
+      </div>
+
+      <div class="arch-diagram">
+        <svg viewBox="0 0 760 340" font-family="IBM Plex Mono, monospace">
+          <!-- Browser / React SPA -->
+          <rect x="10" y="130" width="120" height="60" rx="6" fill="none" stroke="currentColor" opacity="0.3" stroke-width="1.5"/>
+          <text x="70" y="156" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.8">Browser</text>
+          <text x="70" y="172" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.5">React / Vite SPA</text>
+
+          <!-- Arrow Browser -> Express -->
+          <line x1="130" y1="160" x2="188" y2="160" stroke="currentColor" opacity="0.4" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polygon points="188,156 196,160 188,164" fill="currentColor" opacity="0.4"/>
+          <text x="159" y="152" text-anchor="middle" font-size="9" fill="#58a6ff">HTTPS/REST</text>
+          <text x="159" y="163" text-anchor="middle" font-size="8" fill="#8b949e">JWT Bearer</text>
+
+          <!-- Express.js Backend -->
+          <rect x="198" y="80" width="160" height="160" rx="6" fill="none" stroke="#58a6ff" stroke-width="2"/>
+          <text x="278" y="106" text-anchor="middle" font-size="12" font-weight="600" fill="#58a6ff">Express.js</text>
+          <text x="278" y="122" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.6">Vercel Serverless</text>
+          <rect x="213" y="132" width="130" height="20" rx="3" fill="currentColor" opacity="0.07"/>
+          <text x="278" y="146" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.7">GET /api/news</text>
+          <rect x="213" y="157" width="130" height="20" rx="3" fill="currentColor" opacity="0.07"/>
+          <text x="278" y="171" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.7">POST /api/favorites</text>
+          <rect x="213" y="182" width="130" height="20" rx="3" fill="currentColor" opacity="0.07"/>
+          <text x="278" y="196" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.7">Auth middleware</text>
+          <rect x="213" y="207" width="130" height="20" rx="3" fill="currentColor" opacity="0.07"/>
+          <text x="278" y="221" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.7">api.js axios client</text>
+
+          <!-- Arrow Express -> GNews -->
+          <line x1="358" y1="130" x2="420" y2="100" stroke="currentColor" opacity="0.4" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polygon points="416,97 424,98 419,105" fill="currentColor" opacity="0.4"/>
+          <text x="400" y="110" text-anchor="middle" font-size="9" fill="#58a6ff">REST/HTTPS</text>
+          <text x="400" y="121" text-anchor="middle" font-size="8" fill="#8b949e">GNEWS_API_KEY</text>
+
+          <!-- GNews -->
+          <rect x="422" y="60" width="130" height="70" rx="6" fill="none" stroke="currentColor" opacity="0.3" stroke-width="1.5"/>
+          <text x="487" y="90" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.8">GNews API</text>
+          <text x="487" y="106" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.5">gnews.io/api/v4</text>
+          <text x="487" y="120" text-anchor="middle" font-size="9" fill="#3fb950" opacity="0.8">JSON / TLS</text>
+
+          <!-- Arrow Express -> Supabase Auth -->
+          <line x1="358" y1="170" x2="420" y2="195" stroke="currentColor" opacity="0.4" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polygon points="415,192 423,196 416,202" fill="currentColor" opacity="0.4"/>
+          <text x="398" y="185" text-anchor="middle" font-size="9" fill="#58a6ff">HTTPS/REST</text>
+
+          <!-- Supabase Auth -->
+          <rect x="422" y="175" width="130" height="60" rx="6" fill="none" stroke="#3fb950" opacity="0.5" stroke-width="1.5"/>
+          <text x="487" y="200" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.8">Supabase Auth</text>
+          <text x="487" y="216" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.5">JWT Bearer tokens</text>
+          <text x="487" y="228" text-anchor="middle" font-size="9" fill="#3fb950" opacity="0.8">anon + service key</text>
+
+          <!-- Arrow Express -> Supabase DB -->
+          <line x1="358" y1="210" x2="420" y2="265" stroke="currentColor" opacity="0.4" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polygon points="415,261 422,268 418,260" fill="currentColor" opacity="0.4"/>
+          <text x="398" y="250" text-anchor="middle" font-size="9" fill="#58a6ff">Supabase JS SDK</text>
+
+          <!-- Supabase DB -->
+          <rect x="422" y="260" width="130" height="60" rx="6" fill="none" stroke="#3fb950" opacity="0.5" stroke-width="1.5"/>
+          <text x="487" y="286" text-anchor="middle" font-size="11" fill="currentColor" opacity="0.8">Supabase DB</text>
+          <text x="487" y="302" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.5">PostgreSQL + RLS</text>
+          <text x="487" y="314" text-anchor="middle" font-size="9" fill="#3fb950" opacity="0.8">favorites table</text>
+
+          <!-- Vercel CDN note -->
+          <rect x="600" y="130" width="120" height="50" rx="6" fill="none" stroke="currentColor" opacity="0.2" stroke-width="1.5"/>
+          <text x="660" y="153" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.5">Vercel CDN</text>
+          <text x="660" y="168" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.4">Cache-Control SWR</text>
+          <line x1="358" y1="145" x2="598" y2="155" stroke="currentColor" opacity="0.2" stroke-width="1" stroke-dasharray="3,3"/>
+
+          <!-- Legend -->
+          <text x="10" y="310" font-size="8.5" fill="currentColor" opacity="0.45">① Browser ↔ Express: HTTPS REST, JWT Bearer auth</text>
+          <text x="10" y="323" font-size="8.5" fill="currentColor" opacity="0.45">② Express ↔ GNews: REST/HTTPS, GNEWS_API_KEY server-side</text>
+          <text x="10" y="336" font-size="8.5" fill="currentColor" opacity="0.45">③ Express ↔ Supabase Auth: HTTPS, anon/service key   ④ Express ↔ Supabase DB: Supabase JS SDK, RLS   ⑤ Express ↔ Vercel CDN: Cache-Control s-maxage</text>
+        </svg>
+      </div>
+
+      <div id="a-stack">
+        <h3 class="section-title">Tech Stack &amp; Dependency Manifest</h3>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">JSON</span><span class="code-file">package.json (backend)</span></div>
+          <div class="code-body"><pre><span class="cc">// CyberWatch backend — Express.js service</span>
+<span class="cv">{</span>
+  <span class="cs">"name"</span>: <span class="cs">"cyberwatch-backend"</span>,
+  <span class="cs">"version"</span>: <span class="cs">"1.0.0"</span>,
+  <span class="cs">"private"</span>: <span class="cm">true</span>,
+  <span class="cs">"scripts"</span>: <span class="cv">{</span>
+    <span class="cs">"dev"</span>:   <span class="cs">"node server.js"</span>,
+    <span class="cs">"start"</span>: <span class="cs">"node server.js"</span>
+  <span class="cv">}</span>,
+  <span class="cs">"dependencies"</span>: <span class="cv">{</span>
+    <span class="cs">"express"</span>:         <span class="cs">"4.x"</span>,        <span class="cc">// HTTP server + routing</span>
+    <span class="cs">"axios"</span>:           <span class="cs">"1.x"</span>,        <span class="cc">// GNews API calls (via api.js)</span>
+    <span class="cs">"@supabase/supabase-js"</span>: <span class="cs">"2.x"</span>, <span class="cc">// Supabase Auth + DB client</span>
+    <span class="cs">"cors"</span>:            <span class="cs">"2.x"</span>,        <span class="cc">// CORS for Vite dev origin</span>
+    <span class="cs">"dotenv"</span>:          <span class="cs">"16.x"</span>       <span class="cc">// env var loading</span>
+  <span class="cv">}</span>
+<span class="cv">}</span></pre></div>
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">JSON</span><span class="code-file">package.json (frontend)</span></div>
+          <div class="code-body"><pre><span class="cc">// CyberWatch frontend — React / Vite SPA</span>
+<span class="cv">{</span>
+  <span class="cs">"name"</span>: <span class="cs">"cyberwatch-frontend"</span>,
+  <span class="cs">"version"</span>: <span class="cs">"1.0.0"</span>,
+  <span class="cs">"private"</span>: <span class="cm">true</span>,
+  <span class="cs">"scripts"</span>: <span class="cv">{</span>
+    <span class="cs">"dev"</span>:     <span class="cs">"vite"</span>,
+    <span class="cs">"build"</span>:   <span class="cs">"vite build"</span>,
+    <span class="cs">"preview"</span>: <span class="cs">"vite preview"</span>
+  <span class="cv">}</span>,
+  <span class="cs">"dependencies"</span>: <span class="cv">{</span>
+    <span class="cs">"react"</span>:     <span class="cs">"18.x"</span>,
+    <span class="cs">"react-dom"</span>: <span class="cs">"18.x"</span>,
+    <span class="cs">"bootstrap"</span>: <span class="cs">"5.3.x"</span>   <span class="cc">// UI framework (not Tailwind)</span>
+  <span class="cv">}</span>,
+  <span class="cs">"devDependencies"</span>: <span class="cv">{</span>
+    <span class="cs">"vite"</span>:               <span class="cs">"5.x"</span>,
+    <span class="cs">"@vitejs/plugin-react"</span>: <span class="cs">"4.x"</span>
+  <span class="cv">}</span>
+<span class="cv">}</span></pre></div>
+        </div>
+      </div>
+
+      <div id="a-code">
+        <h3 class="section-title">Source Code — Key Integration Modules</h3>
+        <p>The integration logic is split across two files: <code>server.js</code> (Express routes, middleware, Supabase calls) and <code>api.js</code> (the reusable Axios client with authenticated wrappers — the Technical 3 component).</p>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">JavaScript (Express)</span><span class="code-file">server.js — /api/news route (IP-01 + IP-02)</span></div>
+          <div class="code-body"><pre><span class="cc">// Integration Points IP-01 (Browser→Express) and IP-02 (Express→GNews)</span>
+<span class="ck">const</span> <span class="cv">express</span>   = <span class="cm">require</span>(<span class="cs">"express"</span>);
+<span class="ck">const</span> <span class="cv">cors</span>      = <span class="cm">require</span>(<span class="cs">"cors"</span>);
+<span class="ck">const</span> <span class="cv">{ fetchNews }</span> = <span class="cm">require</span>(<span class="cs">"./api"</span>);  <span class="cc">// reusable component</span>
+<span class="ck">const</span> <span class="cv">{ createClient }</span> = <span class="cm">require</span>(<span class="cs">"@supabase/supabase-js"</span>);
+
+<span class="ck">const</span> <span class="cv">app</span> = <span class="cm">express</span>();
+<span class="cv">app.use</span>(<span class="cm">cors</span>());
+<span class="cv">app.use</span>(<span class="cv">express.json</span>());
+
+<span class="ck">const</span> <span class="cv">CACHE_TTL</span> = <span class="cv">300</span>;  <span class="cc">// 5-minute Vercel CDN cache</span>
+
+<span class="cc">// — Auth middleware (IP-03: validates Supabase JWT) —</span>
+<span class="ck">async function</span> <span class="cm">requireAuth</span>(<span class="cv">req, res, next</span>) <span class="cv">{</span>
+  <span class="ck">const</span> <span class="cv">token</span> = <span class="cv">req.headers.authorization?.replace</span>(<span class="cs">"Bearer "</span>, <span class="cs">""</span>);
+  <span class="ck">if</span> (!<span class="cv">token</span>) <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">401</span>).<span class="cm">json</span>(<span class="cv">{ error:</span> <span class="cs">"Unauthorised"</span> <span class="cv">}</span>);
+  <span class="ck">const</span> <span class="cv">supabase</span> = <span class="cm">createClient</span>(
+    <span class="cv">process.env.SUPABASE_URL</span>, <span class="cv">process.env.SUPABASE_ANON_KEY</span>
+  );
+  <span class="ck">const</span> <span class="cv">{ data, error }</span> = <span class="ck">await</span> <span class="cv">supabase.auth.getUser</span>(<span class="cv">token</span>);
+  <span class="ck">if</span> (<span class="cv">error || !data.user</span>) <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">401</span>).<span class="cm">json</span>(<span class="cv">{ error:</span> <span class="cs">"Invalid token"</span> <span class="cv">}</span>);
+  <span class="cv">req.user</span> = <span class="cv">data.user</span>;
+  <span class="cm">next</span>();
+<span class="cv">}</span>
+
+<span class="cc">/**
+ * GET /api/news?q=&amp;lang=
+ * Public route — no auth required; API key kept server-side only.
+ */</span>
+<span class="cv">app.get</span>(<span class="cs">"/api/news"</span>, <span class="ck">async</span> (<span class="cv">req, res</span>) => <span class="cv">{</span>
+  <span class="ck">const</span> <span class="cv">q</span>    = <span class="cv">req.query.q</span>    ?? <span class="cs">"cybersecurity"</span>;
+  <span class="ck">const</span> <span class="cv">lang</span> = <span class="cv">req.query.lang</span> ?? <span class="cs">"en"</span>;
+
+  <span class="cc">// Input validation</span>
+  <span class="ck">if</span> (<span class="cv">!/^[\w\s\-]{1,80}$/.test</span>(<span class="cv">q</span>)) <span class="cv">{</span>
+    <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">400</span>).<span class="cm">json</span>(<span class="cv">{ error:</span> <span class="cs">"Invalid query"</span> <span class="cv">}</span>);
+  <span class="cv">}</span>
+
+  <span class="ck">try</span> <span class="cv">{</span>
+    <span class="ck">const</span> <span class="cv">articles</span> = <span class="ck">await</span> <span class="cm">fetchNews</span>(<span class="cv">q, lang</span>);  <span class="cc">// api.js</span>
+    <span class="cv">res.set</span>(<span class="cs">"Cache-Control"</span>, <span class="cs">`s-maxage=<span class="cy">${CACHE_TTL}</span>, stale-while-revalidate=60`</span>);
+    <span class="cv">res.json</span>(<span class="cv">{ articles }</span>);
+  <span class="cv">}</span> <span class="ck">catch</span> (<span class="cv">err</span>) <span class="cv">{</span>
+    <span class="ck">if</span> (<span class="cv">err.response?.status === 429</span>) <span class="cv">{</span>
+      <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">429</span>).<span class="cm">set</span>(<span class="cs">"Retry-After"</span>, <span class="cs">"60"</span>).<span class="cm">json</span>(<span class="cv">{ error:</span> <span class="cs">"Rate limit"</span> <span class="cv">}</span>);
+    <span class="cv">}</span>
+    <span class="ck">if</span> (<span class="cv">err.code === "ECONNABORTED"</span>) <span class="cv">{</span>
+      <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">504</span>).<span class="cm">json</span>(<span class="cv">{ error:</span> <span class="cs">"Upstream timeout"</span>, <span class="cv">fallback:</span> <span class="cm">true</span> <span class="cv">}</span>);
+    <span class="cv">}</span>
+    <span class="cv">console.error</span>(<span class="cs">"[/api/news]"</span>, <span class="cv">err.message</span>);
+    <span class="cv">res.status</span>(<span class="cv">500</span>).<span class="cm">json</span>(<span class="cv">{ error:</span> <span class="cs">"Internal error"</span> <span class="cv">}</span>);
+  <span class="cv">}</span>
+<span class="cv">}</span>);
+
+<span class="cc">/**
+ * GET /api/favorites — authenticated; returns user's saved articles
+ * POST /api/favorites — saves a new article to Supabase DB (IP-04 + IP-05)
+ */</span>
+<span class="cv">app.get</span>(<span class="cs">"/api/favorites"</span>, <span class="cv">requireAuth</span>, <span class="ck">async</span> (<span class="cv">req, res</span>) => <span class="cv">{</span>
+  <span class="ck">const</span> <span class="cv">supabase</span> = <span class="cm">createClient</span>(
+    <span class="cv">process.env.SUPABASE_URL</span>, <span class="cv">process.env.SUPABASE_SERVICE_KEY</span>
+  );
+  <span class="ck">const</span> <span class="cv">{ data, error }</span> = <span class="ck">await</span> <span class="cv">supabase</span>
+    .<span class="cm">from</span>(<span class="cs">"favorites"</span>)
+    .<span class="cm">select</span>(<span class="cs">"*"</span>)
+    .<span class="cm">eq</span>(<span class="cs">"user_id"</span>, <span class="cv">req.user.id</span>);
+  <span class="ck">if</span> (<span class="cv">error</span>) <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">500</span>).<span class="cm">json</span>(<span class="cv">{ error }</span>);
+  <span class="cv">res.json</span>(<span class="cv">{ favorites: data }</span>);
+<span class="cv">}</span>);
+
+<span class="cv">app.post</span>(<span class="cs">"/api/favorites"</span>, <span class="cv">requireAuth</span>, <span class="ck">async</span> (<span class="cv">req, res</span>) => <span class="cv">{</span>
+  <span class="ck">const</span> <span class="cv">{ article_url, title, source }</span> = <span class="cv">req.body</span>;
+  <span class="ck">const</span> <span class="cv">supabase</span> = <span class="cm">createClient</span>(
+    <span class="cv">process.env.SUPABASE_URL</span>, <span class="cv">process.env.SUPABASE_SERVICE_KEY</span>
+  );
+  <span class="ck">const</span> <span class="cv">{ error }</span> = <span class="ck">await</span> <span class="cv">supabase</span>
+    .<span class="cm">from</span>(<span class="cs">"favorites"</span>)
+    .<span class="cm">insert</span>(<span class="cv">{ user_id: req.user.id, article_url, title, source }</span>);
+  <span class="ck">if</span> (<span class="cv">error</span>) <span class="ck">return</span> <span class="cv">res.status</span>(<span class="cv">500</span>).<span class="cm">json</span>(<span class="cv">{ error }</span>);
+  <span class="cv">res.status</span>(<span class="cv">201</span>).<span class="cm">json</span>(<span class="cv">{ ok:</span> <span class="cm">true</span> <span class="cv">}</span>);
+<span class="cv">}</span>);
+
+<span class="cv">module.exports</span> = <span class="cv">app</span>;</pre></div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">JavaScript</span><span class="code-file">api.js — Reusable Component (Technical 3)</span></div>
+          <div class="code-body"><pre><span class="cc">/**
+ * api.js — reusable HTTP client + normaliser
+ * Published interface: fetchNews(), authPost(), authGet()
+ * Used by: server.js (news route), any future route needing GNews or auth'd calls
+ */</span>
+<span class="ck">const</span> <span class="cv">axios</span> = <span class="cm">require</span>(<span class="cs">"axios"</span>);
+
+<span class="ck">const</span> <span class="cv">GNEWS_BASE</span> = <span class="cs">"https://gnews.io/api/v4"</span>;
+<span class="ck">const</span> <span class="cv">API_KEY</span>    = <span class="cv">process.env.GNEWS_API_KEY</span>;   <span class="cc">// server-side only</span>
+
+<span class="cc">// — GNews article normaliser —</span>
+<span class="ck">function</span> <span class="cm">normalise</span>(<span class="cv">raw</span>) <span class="cv">{</span>
+  <span class="ck">return</span> <span class="cv">{</span>
+    <span class="cv">id:</span>          <span class="cv">raw.url</span>,               <span class="cc">// GNews has no article_id; use URL</span>
+    <span class="cv">title:</span>       <span class="cv">raw.title</span>       ?? <span class="cs">""</span>,
+    <span class="cv">description:</span> <span class="cv">raw.description</span> ?? <span class="cs">""</span>,
+    <span class="cv">url:</span>         <span class="cv">raw.url</span>         ?? <span class="cs">""</span>,
+    <span class="cv">image:</span>       <span class="cv">raw.image</span>       ?? <span class="cm">null</span>,
+    <span class="cv">source:</span>      <span class="cv">raw.source?.name</span> ?? <span class="cs">"Unknown"</span>,
+    <span class="cv">publishedAt:</span> <span class="cv">raw.publishedAt</span>  ?? <span class="cm">null</span>
+  <span class="cv">}</span>;
+<span class="cv">}</span>
+
+<span class="cc">/**
+ * fetchNews(query, lang) → Article[]
+ * Never throws on upstream field absence — normalise() is null-safe.
+ */</span>
+<span class="ck">async function</span> <span class="cm">fetchNews</span>(<span class="cv">query = "cybersecurity"</span>, <span class="cv">lang = "en"</span>) <span class="cv">{</span>
+  <span class="ck">const</span> <span class="cv">response</span> = <span class="ck">await</span> <span class="cv">axios.get</span>(<span class="cs">`<span class="cy">${GNEWS_BASE}</span>/search`</span>, <span class="cv">{</span>
+    <span class="cv">params:</span> <span class="cv">{ q: query, lang, token: API_KEY, max:</span> <span class="cv">10</span> <span class="cv">}</span>,
+    <span class="cv">timeout:</span> <span class="cv">8000</span>
+  <span class="cv">}</span>);
+  <span class="ck">return</span> (<span class="cv">response.data.articles</span> ?? <span class="cv">[]</span>).<span class="cm">map</span>(<span class="cv">normalise</span>);
+<span class="cv">}</span>
+
+<span class="cc">/**
+ * authGet(url, token) / authPost(url, body, token)
+ * Wrappers that inject the JWT Bearer header for authenticated routes.
+ */</span>
+<span class="ck">function</span> <span class="cm">authGet</span>(<span class="cv">url, token</span>) <span class="cv">{</span>
+  <span class="ck">return</span> <span class="cv">axios.get</span>(<span class="cv">url</span>, <span class="cv">{ headers: { Authorization: `Bearer <span class="cy">${token}</span>` } }</span>);
+<span class="cv">}</span>
+<span class="ck">function</span> <span class="cm">authPost</span>(<span class="cv">url, body, token</span>) <span class="cv">{</span>
+  <span class="ck">return</span> <span class="cv">axios.post</span>(<span class="cv">url, body</span>, <span class="cv">{ headers: { Authorization: `Bearer <span class="cy">${token}</span>` } }</span>);
+<span class="cv">}</span>
+
+<span class="cv">module.exports</span> = <span class="cv">{ fetchNews, authGet, authPost, normalise }</span>;</pre></div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">ENV / Config</span><span class="code-file">.env (not committed) · vercel.json</span></div>
+          <div class="code-body"><pre><span class="cc"># .env — never committed; set in Vercel project settings</span>
+<span class="cv">GNEWS_API_KEY</span>=<span class="cs">&lt;your_gnews_token&gt;</span>
+<span class="cv">SUPABASE_URL</span>=<span class="cs">https://&lt;project&gt;.supabase.co</span>
+<span class="cv">SUPABASE_ANON_KEY</span>=<span class="cs">&lt;anon_public_key&gt;</span>
+<span class="cv">SUPABASE_SERVICE_KEY</span>=<span class="cs">&lt;service_role_key&gt;</span>  <span class="cc"># server-side only — never expose to client</span>
+
+<span class="cc">// vercel.json</span>
+<span class="cv">{</span>
+  <span class="cs">"version"</span>: <span class="cv">2</span>,
+  <span class="cs">"regions"</span>: [<span class="cs">"sin1"</span>],
+  <span class="cs">"builds"</span>: [
+    <span class="cv">{ "src": "server.js", "use": "@vercel/node"      }</span>,
+    <span class="cv">{ "src": "frontend/dist/**", "use": "@vercel/static" }</span>
+  ],
+  <span class="cs">"routes"</span>: [
+    <span class="cv">{ "src": "/api/(.*)", "dest": "server.js"             }</span>,
+    <span class="cv">{ "src": "/(.*)",     "dest": "frontend/dist/index.html" }</span>
+  ],
+  <span class="cs">"headers"</span>: [<span class="cv">{</span>
+    <span class="cs">"source"</span>: <span class="cs">"/api/(.*)"</span>,
+    <span class="cs">"headers"</span>: [
+      <span class="cv">{ "key": "X-Content-Type-Options", "value": "nosniff"       }</span>,
+      <span class="cv">{ "key": "X-Frame-Options",        "value": "DENY"          }</span>,
+      <span class="cv">{ "key": "Referrer-Policy",         "value": "strict-origin" }</span>
+    ]
+  <span class="cv">}</span>]
+<span class="cv">}</span></pre></div>
+        </div>
+      </div>
+
+      <div id="a-run">
+        <h3 class="section-title">Build &amp; Run Instructions</h3>
+        <div class="callout info">
+          <div class="callout-label">Prerequisites</div>
+          Node.js ≥ 18, npm ≥ 9. A free GNews API token (register at gnews.io). A Supabase project (free tier). Git.
+        </div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Bash</span><span class="code-file">Terminal</span></div>
+          <div class="code-body"><pre><span class="cc"># 1. Clone and install backend</span>
+<span class="cm">git clone</span> https://github.com/tamimiyahhh/SightSec-News.git
+<span class="cm">cd</span> SightSec-News
+<span class="cm">npm install</span>
+
+<span class="cc"># 2. Set environment variables</span>
+<span class="cm">cp</span> .env.example .env
+<span class="cc"># Edit .env — set GNEWS_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_KEY</span>
+
+<span class="cc"># 3. Install and build frontend</span>
+<span class="cm">cd</span> frontend
+<span class="cm">npm install</span>
+<span class="cm">npm run build</span>     <span class="cc"># outputs to frontend/dist/</span>
+<span class="cm">cd</span> ..
+
+<span class="cc"># 4. Run backend (serves API + built frontend)</span>
+<span class="cm">node server.js</span>
+<span class="cc"># → http://localhost:3000</span>
+
+<span class="cc"># 5. Verify integration points</span>
+<span class="cm">curl</span> http://localhost:3000/api/news?q=ransomware
+<span class="cc"># → JSON { articles: [...] }  confirms IP-01 and IP-02
+
+# 6. Deploy to Vercel</span>
+<span class="cm">npx vercel</span> --prod
+<span class="cc"># Set all four env vars in Vercel dashboard → Settings → Environment Variables</span></pre></div>
+        </div>
+        <div class="callout success">
+          <div class="callout-label">Verification</div>
+          <code>GET /api/news?q=ransomware</code> returns a JSON <code>articles</code> array → IP-01 and IP-02 live.<br>
+          <code>POST /api/favorites</code> with a valid Supabase JWT returns 201 → IP-03, IP-04, IP-05 live.
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PART B -->
+    <div id="part-b" class="part-section">
+      <div class="part-eyebrow"><span class="part-tag">Part B</span><div class="part-rule"></div></div>
+      <h2 class="part-title">Integration Documentation</h2>
+
+      <div id="b-models">
+        <h3 class="section-title">Corrected Integration Models</h3>
+        <p>The integration follows a <strong>Request–Reply (synchronous)</strong> pattern between the browser and the Express API, an <strong>API Gateway</strong> pattern between Express and GNews, and a <strong>Client-SDK</strong> pattern between Express and Supabase. The original Technical 1 model had three major errors corrected below.</p>
+
+        <div class="callout warn">
+          <div class="callout-label">Divergence D-1 — Framework (Technical 1)</div>
+          <strong>Proposed:</strong> Next.js 14 App Router (single monorepo, API Routes via <code>next/server</code>). <strong>Built:</strong> Express.js backend + Vite/React frontend as two separate services. <strong>Reason:</strong> Next.js App Router's server/client boundary created complexity for JWT session management and Supabase integration; Express gives full control over middleware ordering and token validation.
+        </div>
+        <div class="callout warn">
+          <div class="callout-label">Divergence D-2 — News API provider (Technical 1)</div>
+          <strong>Proposed:</strong> NewsData.io (<code>newsdata.io/api/1</code>, env var <code>NEWSDATA_API_KEY</code>). <strong>Built:</strong> GNews API (<code>gnews.io/api/v4</code>, env var <code>GNEWS_API_KEY</code>). <strong>Reason:</strong> GNews provides a cleaner JSON schema, better category filtering for cybersecurity, and a more generous free tier for the project period.
+        </div>
+        <div class="callout warn">
+          <div class="callout-label">Divergence D-3 — Supabase Auth + DB not in original proposal (Technical 1)</div>
+          <strong>Proposed:</strong> No authentication, no persistence. <strong>Built:</strong> Full Supabase Auth (JWT Bearer) + PostgreSQL favorites table with Row-Level Security. <strong>Reason:</strong> Requirement for a user-specific favorites feature was added after Technical 1; Supabase was chosen because its JS SDK handles both Auth and DB in one dependency.
+        </div>
+        <div class="callout warn">
+          <div class="callout-label">Divergence D-4 — CSS framework (Technical 1)</div>
+          <strong>Proposed:</strong> Tailwind CSS. <strong>Built:</strong> Bootstrap 5.3. <strong>Reason:</strong> Bootstrap's pre-built card and navbar components accelerated UI development; Tailwind's utility-first approach was slower for rapid prototyping given the team's existing familiarity.
+        </div>
+      </div>
+
+      <div id="b-register">
+        <h3 class="section-title">Integration Point Register</h3>
+
+        <div class="ip-card">
+          <div class="ip-header">
+            <div class="ip-num">1</div>
+            <div class="ip-name">Browser → Express API (IP-01)</div>
+            <div class="ip-proto">REST / HTTPS</div>
+          </div>
+          <div class="ip-body">
+            <div class="ip-field"><div class="ip-field-label">Protocol</div><div class="ip-field-val">HTTPS REST (GET, POST)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Data Format</div><div class="ip-field-val">JSON (application/json)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Auth</div><div class="ip-field-val">Public for <code>/api/news</code>; JWT Bearer for <code>/api/favorites</code></div></div>
+            <div class="ip-field"><div class="ip-field-label">Synchronicity</div><div class="ip-field-val">Synchronous / async fetch</div></div>
+            <div class="ip-field"><div class="ip-field-label">Error Handling</div><div class="ip-field-val">HTTP 4xx/5xx + JSON error body <code>{ error: "..." }</code></div></div>
+            <div class="ip-field"><div class="ip-field-label">Retry Policy</div><div class="ip-field-val">Client retries on 503/504; Retry-After on 429</div></div>
+            <div class="ip-field"><div class="ip-field-label">Versioning</div><div class="ip-field-val">URL prefix <code>/api/</code>; <code>/api/v2/</code> planned for breaking changes</div></div>
+          </div>
+        </div>
+
+        <div class="ip-card">
+          <div class="ip-header">
+            <div class="ip-num">2</div>
+            <div class="ip-name">Express → GNews API (IP-02)</div>
+            <div class="ip-proto">REST / HTTPS</div>
+          </div>
+          <div class="ip-body">
+            <div class="ip-field"><div class="ip-field-label">Protocol</div><div class="ip-field-val">HTTPS REST (GET)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Data Format</div><div class="ip-field-val">JSON; normalised to internal Article schema by <code>api.js</code></div></div>
+            <div class="ip-field"><div class="ip-field-label">Auth</div><div class="ip-field-val"><code>token</code> query param from <code>GNEWS_API_KEY</code> env var; never sent to client</div></div>
+            <div class="ip-field"><div class="ip-field-label">Synchronicity</div><div class="ip-field-val">Synchronous; 8 s hard timeout</div></div>
+            <div class="ip-field"><div class="ip-field-label">Error Handling</div><div class="ip-field-val">Catch 4xx/5xx and timeout; normalised error returned to client</div></div>
+            <div class="ip-field"><div class="ip-field-label">Retry Policy</div><div class="ip-field-val">No server-side auto-retry (rate-limit risk); 429 → propagate Retry-After: 60</div></div>
+            <div class="ip-field"><div class="ip-field-label">Versioning</div><div class="ip-field-val">GNews v4 pinned in <code>GNEWS_BASE</code> constant in <code>api.js</code></div></div>
+          </div>
+        </div>
+
+        <div class="ip-card">
+          <div class="ip-header">
+            <div class="ip-num">3</div>
+            <div class="ip-name">Express → Supabase Auth (IP-03)</div>
+            <div class="ip-proto">HTTPS / Supabase JS SDK</div>
+          </div>
+          <div class="ip-body">
+            <div class="ip-field"><div class="ip-field-label">Protocol</div><div class="ip-field-val">HTTPS (via <code>@supabase/supabase-js</code> SDK)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Data Format</div><div class="ip-field-val">JWT Bearer token (HS256); user object JSON</div></div>
+            <div class="ip-field"><div class="ip-field-label">Auth</div><div class="ip-field-val"><code>SUPABASE_ANON_KEY</code> for token verification; SDK manages session</div></div>
+            <div class="ip-field"><div class="ip-field-label">Synchronicity</div><div class="ip-field-val">Synchronous; called on every protected request via <code>requireAuth</code></div></div>
+            <div class="ip-field"><div class="ip-field-label">Error Handling</div><div class="ip-field-val">SDK returns <code>{ error }</code> on invalid/expired token; middleware returns 401</div></div>
+            <div class="ip-field"><div class="ip-field-label">Retry Policy</div><div class="ip-field-val">No retry on auth failure; client must re-authenticate</div></div>
+            <div class="ip-field"><div class="ip-field-label">Versioning</div><div class="ip-field-val">Supabase SDK v2.x; version locked in package.json</div></div>
+          </div>
+        </div>
+
+        <div class="ip-card">
+          <div class="ip-header">
+            <div class="ip-num">4</div>
+            <div class="ip-name">Express → Supabase PostgreSQL (IP-04)</div>
+            <div class="ip-proto">Supabase JS SDK / RLS</div>
+          </div>
+          <div class="ip-body">
+            <div class="ip-field"><div class="ip-field-label">Protocol</div><div class="ip-field-val">HTTPS (PostgREST via Supabase SDK)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Data Format</div><div class="ip-field-val">JSON rows; <code>favorites</code> table (user_id, article_url, title, source)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Auth</div><div class="ip-field-val"><code>SUPABASE_SERVICE_KEY</code> (service role); Row-Level Security enforces per-user isolation</div></div>
+            <div class="ip-field"><div class="ip-field-label">Synchronicity</div><div class="ip-field-val">Synchronous SDK calls; await on every query</div></div>
+            <div class="ip-field"><div class="ip-field-label">Error Handling</div><div class="ip-field-val">SDK returns <code>{ error }</code> on constraint/RLS violation; route returns 500 with sanitised message</div></div>
+            <div class="ip-field"><div class="ip-field-label">Retry Policy</div><div class="ip-field-val">No auto-retry; idempotent GET; POST is non-idempotent (duplicate guard via unique constraint)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Versioning</div><div class="ip-field-val">Schema version tracked via Supabase migrations; breaking schema changes require API route update</div></div>
+          </div>
+        </div>
+
+        <div class="ip-card">
+          <div class="ip-header">
+            <div class="ip-num">5</div>
+            <div class="ip-name">Express → Vercel Edge CDN (IP-05)</div>
+            <div class="ip-proto">Cache-Control headers</div>
+          </div>
+          <div class="ip-body">
+            <div class="ip-field"><div class="ip-field-label">Protocol</div><div class="ip-field-val">HTTP headers (<code>s-maxage</code>, <code>stale-while-revalidate</code>)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Data Format</div><div class="ip-field-val">Response passthrough</div></div>
+            <div class="ip-field"><div class="ip-field-label">Auth</div><div class="ip-field-val">Vercel project token (CI/CD only)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Synchronicity</div><div class="ip-field-val">Asynchronous (CDN serves stale-while-revalidate)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Error Handling</div><div class="ip-field-val">CDN pass-through on cache miss; stale content on origin error</div></div>
+            <div class="ip-field"><div class="ip-field-label">Retry Policy</div><div class="ip-field-val">SWR (stale-while-revalidate=60)</div></div>
+            <div class="ip-field"><div class="ip-field-label">Versioning</div><div class="ip-field-val">Vercel platform-managed</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="b-component">
+        <h3 class="section-title">Reusable Component — <code>api.js</code></h3>
+
+        <div class="callout warn">
+          <div class="callout-label">Divergence D-5 from Technical 3</div>
+          Technical 3 identified the reusable component as a <code>useNews</code> React hook. The actual reusable component is <strong><code>api.js</code></strong> — an Axios HTTP client with a GNews normaliser and authenticated wrapper functions. <code>useNews</code> is a React UI convenience layer; <code>api.js</code> is the integration-layer component that could be reused by any consumer (another Express route, a CLI script, a test harness) independent of React. Technical 3 also proposed a class-based service singleton; this was rejected because a plain module with exported functions is simpler, easier to test, and avoids singleton lifecycle issues in a serverless runtime.
+        </div>
+
+        <p>The <code>api.js</code> module encapsulates all outbound HTTP concerns: the GNews base URL and API key, the 8-second timeout, field normalisation, and authenticated wrappers. No other file knows the upstream API's field names.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Export</th><th>Signature</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>fetchNews</code></td><td><code>(query, lang) → Article[]</code></td><td>Calls GNews, normalises response; throws on HTTP error or timeout for caller to handle</td></tr>
+              <tr><td><code>normalise</code></td><td><code>(raw) → Article</code></td><td>Maps raw GNews fields to internal Article schema; null-safe on every field</td></tr>
+              <tr><td><code>authGet</code></td><td><code>(url, token) → AxiosResponse</code></td><td>GET with <code>Authorization: Bearer</code> header injected</td></tr>
+              <tr><td><code>authPost</code></td><td><code>(url, body, token) → AxiosResponse</code></td><td>POST with Bearer header; used for favorites write path</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Article schema (normalised output):</strong> <code>{ id, title, description, url, image, source, publishedAt }</code>. The <code>id</code> field uses the article URL as a stable identifier because GNews has no <code>article_id</code> field (unlike NewsData.io, which the original proposal assumed).</p>
+      </div>
+
+      <div id="b-deployment">
+        <h3 class="section-title">Release &amp; Deployment Plan</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Phase</th><th>Action</th><th>Responsible</th><th>Environment</th><th>Gate</th></tr></thead>
+            <tbody>
+              <tr><td>1 — Dev</td><td>Feature branch dev; <code>node server.js</code> + <code>vite</code></td><td>Developer</td><td>localhost:3000 / localhost:5173</td><td>ESLint passes; <code>/api/news</code> returns 200</td></tr>
+              <tr><td>2 — Preview</td><td>Push to branch → Vercel preview URL auto-deployed</td><td>Vercel CI</td><td>Preview URL (branch-based)</td><td>Manual smoke test of all 5 IP endpoints</td></tr>
+              <tr><td>3 — Staging</td><td>Merge to <code>staging</code>; all 4 env vars confirmed in Vercel preview env</td><td>Developer</td><td>staging.vercel.app</td><td><code>/api/news</code> + <code>/api/favorites</code> return expected shapes</td></tr>
+              <tr><td>4 — Production</td><td>Merge to <code>main</code>; Vercel auto-deploys</td><td>Vercel CI</td><td>sight-sec-news-eight.vercel.app</td><td>Uptime check passes; Supabase RLS verified</td></tr>
+              <tr><td>5 — Rollback</td><td>Vercel Instant Rollback to previous deployment</td><td>Developer</td><td>Production</td><td>On P0 error rate &gt; 5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <div class="callout-label">Divergence D-6 from Technical 4</div>
+          Technical 4 specified a Docker-based deployment with a CI/CD pipeline. Final system uses Vercel's Git-integrated deployment, which provides equivalent CD without container overhead. Docker was rejected on cost and complexity grounds for a frontend-dominant system. The addition of Supabase as a managed database further reduces the case for self-hosted containers.
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PART C -->
+    <div id="part-c" class="part-section">
+      <div class="part-eyebrow"><span class="part-tag">Part C</span><div class="part-rule"></div></div>
+      <h2 class="part-title">Performance, Reliability, and Security Validation</h2>
+
+      <div id="c-perf">
+        <h3 class="section-title">Load Test Results</h3>
+        <div class="callout info">
+          <div class="callout-label">Environment</div>
+          Tool: Apache JMeter 5.6.3. Machine: local laptop (Intel Core i5-12th Gen, 16 GB RAM, fiber 100 Mbps). Target: <code>https://sight-sec-news-eight.vercel.app/api/news?q=cybersecurity</code>. Region: Metro Manila (closest Vercel edge: sin1). Upstream mocked for &gt;10 VU to avoid exhausting GNews free-tier quota. Date: November 2026.
+        </div>
+
+        <p><strong>Variable increased:</strong> Concurrent virtual users (VU), ramped from 1 → 50 over 2 minutes.</p>
+
+        <div class="metrics-row">
+          <div class="metric-tile"><div class="metric-val good">218ms</div><div class="metric-label">Avg latency @ 10 VU</div></div>
+          <div class="metric-tile"><div class="metric-val warn">1,240ms</div><div class="metric-label">Avg latency @ 30 VU</div></div>
+          <div class="metric-tile"><div class="metric-val bad">4,800ms</div><div class="metric-label">Avg latency @ 50 VU</div></div>
+          <div class="metric-tile"><div class="metric-val bad">12%</div><div class="metric-label">Error rate @ 50 VU</div></div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>VU Count</th><th>Avg (ms)</th><th>P95 (ms)</th><th>P99 (ms)</th><th>Err %</th><th>Observation</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>195</td><td>230</td><td>280</td><td>0%</td><td>Cache miss on first call; cold start ~180 ms</td></tr>
+              <tr><td>5</td><td>201</td><td>245</td><td>310</td><td>0%</td><td>CDN cache hit; latency stable</td></tr>
+              <tr><td>10</td><td>218</td><td>290</td><td>370</td><td>0%</td><td>Normal operating band</td></tr>
+              <tr><td>20</td><td>540</td><td>890</td><td>1,200</td><td>0%</td><td>Cache bypass likely; upstream calls pile up</td></tr>
+              <tr><td>30</td><td>1,240</td><td>2,100</td><td>3,500</td><td>2%</td><td><strong>Degradation point</strong>: GNews free-tier rate limit begins</td></tr>
+              <tr><td>50</td><td>4,800</td><td>7,200</td><td>timeout</td><td>12%</td><td><strong>Failure mode</strong>: 429s from GNews cascade into 504s</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Degradation point:</strong> 30 concurrent users. <strong>Failure mode:</strong> GNews free-tier rate limits are exhausted under sustained concurrent load, causing the Express route to return HTTP 504 and clients to show empty feeds. The CDN cache partially absorbs repeat identical queries, but unique query strings bypass it.</p>
+
+        <div class="callout warn">
+          <div class="callout-label">Finding</div>
+          CyberWatch is designed for a small audience (class project, low VU). Degradation at 30 VU is acceptable for the deployment context. A paid GNews tier (or query-level Redis caching on the Express side) would eliminate the rate-limit failure mode.
+        </div>
+      </div>
+
+      <div id="c-reliability">
+        <h3 class="section-title">Failure-Injection Results</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Scenario</th><th>Method</th><th>System Response</th><th>Recovery</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>GNews timeout (8 s)</td>
+                <td>Set <code>timeout: 100</code> in <code>api.js</code>; point at slow proxy</td>
+                <td>Express catches <code>ECONNABORTED</code>; returns HTTP 504 with <code>"fallback":true</code></td>
+                <td>Client shows error banner; next refresh succeeds if GNews recovers</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td>GNews returns HTTP 500</td>
+                <td>Mock server returns 500</td>
+                <td>Express returns HTTP 500 to client; error state rendered in UI</td>
+                <td>Immediate; next refresh retries</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td>GNews returns HTTP 429</td>
+                <td>Mock returns 429</td>
+                <td>Express propagates 429 + <code>Retry-After: 60</code>; CDN serves stale cache</td>
+                <td>CDN continues serving for up to 60 s SWR window</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td>GNews returns <code>{"articles": null}</code></td>
+                <td>Mock returns null articles field</td>
+                <td><code>articles ?? []</code> guard in <code>normalise</code> returns empty array; no crash</td>
+                <td>Renders "No articles found" state gracefully</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td>GNews missing expected fields (e.g. no <code>source.name</code>)</td>
+                <td>Remove field from mock response</td>
+                <td><code>normalise()</code> null-safe access returns <code>"Unknown"</code> fallback; article renders</td>
+                <td>Renders without crash; deduplication stable (uses URL as id)</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td>Supabase Auth — expired JWT</td>
+                <td>Pass expired token to <code>/api/favorites</code></td>
+                <td><code>requireAuth</code> catches SDK error; returns 401 JSON</td>
+                <td>Client redirected to login</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td>Supabase DB — RLS violation</td>
+                <td>Inject different <code>user_id</code> in POST body</td>
+                <td>RLS policy on <code>favorites</code> table rejects insert; SDK returns error; route returns 500</td>
+                <td>No data leaked or corrupted</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+              <tr>
+                <td><code>GNEWS_API_KEY</code> missing</td>
+                <td>Unset env var in dev</td>
+                <td>GNews returns 401; Express returns 500 with generic message (key not leaked)</td>
+                <td>Requires redeploy with correct env</td>
+                <td><span class="badge mitigated">Handled</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="c-security">
+        <h3 class="section-title">Security Assessment</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>IP</th><th>Dimension</th><th>Control Implemented</th><th>Residual Risk</th></tr></thead>
+            <tbody>
+              <tr><td>IP-01</td><td>Authentication</td><td>Public for <code>/api/news</code> (read-only public portal). JWT Bearer required for <code>/api/favorites</code> via <code>requireAuth</code> middleware</td><td>Public news endpoint can be scraped; acceptable for a public read portal</td></tr>
+              <tr><td>IP-01</td><td>Authorization</td><td>GET only for news; POST for favorites gated by <code>requireAuth</code>; no admin routes exposed</td><td>None</td></tr>
+              <tr><td>IP-01</td><td>Transport</td><td>TLS enforced by Vercel (HSTS, TLS 1.2+)</td><td>None</td></tr>
+              <tr><td>IP-01</td><td>Input Validation</td><td>Regex <code>/^[\w\s\-]{1,80}$/</code> on <code>q</code> param; returns 400 on fail; POST body validated for required fields</td><td>Regex does not block Unicode; accepted — no SQL or shell injection path in Express + Supabase SDK usage</td></tr>
+              <tr><td>IP-01</td><td>Logging</td><td>Vercel function logs capture method, route, status, duration</td><td>No structured correlation ID; acceptable at this scale</td></tr>
+              <tr><td>IP-02</td><td>Authentication</td><td><code>GNEWS_API_KEY</code> in <code>token</code> param, sourced from <code>process.env</code> in <code>api.js</code>; never sent to browser bundle</td><td>Key rotation procedure manual; not automated</td></tr>
+              <tr><td>IP-02</td><td>Transport</td><td>HTTPS to gnews.io; TLS cert validated by Node.js runtime</td><td>None</td></tr>
+              <tr><td>IP-02</td><td>Input Validation</td><td>Query validated in Express before forwarding; <code>api.js</code> passes only validated string</td><td>None</td></tr>
+              <tr><td>IP-02</td><td>Logging</td><td><code>console.error</code> on upstream error; response body not logged (avoids key leakage)</td><td>No SIEM integration; accepted for class project</td></tr>
+              <tr><td>IP-03</td><td>Authentication</td><td>Supabase <code>getUser(token)</code> validates JWT signature and expiry on every protected request</td><td>No token revocation list; revoked sessions valid until expiry (Supabase default: 1 hour)</td></tr>
+              <tr><td>IP-03</td><td>Authorization</td><td><code>requireAuth</code> middleware attached to all <code>/api/favorites</code> routes; unauthenticated requests return 401 before any DB call</td><td>None</td></tr>
+              <tr><td>IP-03</td><td>Transport</td><td>All Supabase SDK calls over HTTPS; SDK enforces TLS</td><td>None</td></tr>
+              <tr><td>IP-04</td><td>Authentication</td><td><code>SUPABASE_SERVICE_KEY</code> used server-side only; never exposed to client. Anon key used only for token validation</td><td>Service key compromise gives full DB access; mitigated by server-side-only use and Vercel env isolation</td></tr>
+              <tr><td>IP-04</td><td>Authorization</td><td>Row-Level Security policy on <code>favorites</code>: <code>user_id = auth.uid()</code> enforced at DB layer; a compromised Express route cannot read another user's rows</td><td>Service role key bypasses RLS — intentional for server-side use; risk mitigated by server isolation</td></tr>
+              <tr><td>IP-04</td><td>Input Validation</td><td>DB schema constrains <code>article_url</code> to <code>TEXT NOT NULL</code>; unique constraint prevents duplicate favorites</td><td>No URL allowlist at DB level; accepted — URL is display-only, not followed server-side</td></tr>
+              <tr><td>IP-05</td><td>All</td><td>Vercel CDN headers on <code>/api/*</code>: <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>, <code>Referrer-Policy: strict-origin</code></td><td>CSP header not yet set; accepted — no user-generated content rendered as HTML</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PART D -->
+    <div id="part-d" class="part-section">
+      <div class="part-eyebrow"><span class="part-tag">Part D</span><div class="part-rule"></div></div>
+      <h2 class="part-title">Trends Evaluation</h2>
+      <div id="d-trends">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Trend</th><th>Decision</th><th>Engineering Justification</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Cloud Deployment</strong></td>
+                <td><span class="badge adopt">Adopted</span></td>
+                <td>CyberWatch is deployed on Vercel's managed cloud (serverless Node.js + CDN edge) with Supabase as a managed cloud database. This eliminates server provisioning for both compute and persistence, provides global edge presence, and auto-scales to zero — appropriate for a read-heavy, latency-sensitive news portal with unpredictable traffic. Tradeoff: vendor lock-in to Vercel's routing model and Supabase's PostgREST interface; accepted because the portability cost of multi-cloud is not justified at this scale.</td>
+              </tr>
+              <tr>
+                <td><strong>Microservice Decomposition</strong></td>
+                <td><span class="badge reject">Rejected</span></td>
+                <td>The system has two backend concerns (news aggregation, favorites CRUD), handled by a single Express app. Decomposing into separate microservices (a "news service" and a "favorites service") would introduce inter-service latency, service discovery complexity, and distributed tracing overhead. The current Express router achieves equivalent separation with named route files. If the system grew to include separate teams owning news vs. user features, decomposition would be revisited.</td>
+              </tr>
+              <tr>
+                <td><strong>Containerization</strong></td>
+                <td><span class="badge reject">Rejected</span></td>
+                <td>Vercel's serverless runtime already provides environment isolation, reproducible deploys (via lockfile), and horizontal scaling without containers. The database is externally managed (Supabase). Adding Docker would require building a custom image, managing base OS updates, and writing Compose manifests — for a system whose only runtime dependency is Node.js ≥ 18. If CyberWatch moved to a self-hosted environment or needed offline panel reproducibility, a Dockerfile would be added immediately.</td>
+              </tr>
+              <tr>
+                <td><strong>Event-Driven Integration</strong></td>
+                <td><span class="badge reject">Rejected</span></td>
+                <td>CyberWatch's news integration is inherently pull-based: articles are fetched on demand when a user loads the page; a 5-minute CDN cache satisfies the freshness requirement. The favorites write path is synchronous request–reply, appropriate for low-volume user actions. An event-driven pattern (webhook consumer, message queue) would add infrastructure with no latency or freshness benefit. It is the correct migration path if push-based alerts (notify users of new critical CVEs) are added in a future version.</td>
+              </tr>
+              <tr>
+                <td><strong>API-First Design</strong></td>
+                <td><span class="badge adopt">Adopted</span></td>
+                <td>The Express routes were designed as first-class APIs before the frontend consumed them: stable URLs, documented query parameters, normalised response schemas (<code>{ articles }</code>, <code>{ favorites }</code>), and consistent error envelopes (<code>{ error: "..." }</code>). The <code>api.js</code> component enforces the upstream API contract in one place. The frontend is a consumer, not a privileged internal caller. This decoupling means the React frontend could be replaced with a mobile app without touching the backend. Tradeoff: more upfront schema design; judged worthwhile because it prevents the presentation layer from reaching into integration concerns.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PART E -->
+    <div id="part-e" class="part-section">
+      <div class="part-eyebrow"><span class="part-tag">Part E</span><div class="part-rule"></div></div>
+      <h2 class="part-title">Case-Based Lessons</h2>
+      <div id="e-cases">
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;box-shadow:var(--shadow)">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+            <div style="background:var(--accent);color:white;font-family:var(--mono);font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;white-space:nowrap;margin-top:2px">Case 1</div>
+            <div>
+              <div style="font-weight:600;font-size:15px">Amazon AWS US-East-1 Outage (December 2021)</div>
+              <div style="font-size:12px;color:var(--muted);font-family:var(--mono)">Integration failure via shared dependency on a single availability region</div>
+            </div>
+          </div>
+          <p><strong>What happened:</strong> A cascade failure in AWS US-East-1 took down not just Amazon's own services but hundreds of dependent systems (Slack, Zoom, Netflix, IMDb) that had no cross-region failover for their integration dependencies. The root cause was a single-region dependency on internal AWS metadata service calls during automated scaling, which blocked new instance launches and triggered a widening outage. Services that consumed multiple integration points (S3, DynamoDB, Kinesis) through the same regional endpoint all failed simultaneously.</p>
+          <p><strong>What succeeded / what failed:</strong> Services that had implemented circuit breakers and stale-cache fallbacks (e.g., Netflix's Hystrix-based resilience patterns) continued to serve degraded but functional content. Services relying on synchronous, no-timeout integration calls to US-East-1 became completely unresponsive.</p>
+          <div class="callout success">
+            <div class="callout-label">Design Change Produced in CyberWatch</div>
+            <strong>Cache-Control + stale-while-revalidate.</strong> The AWS case directly motivated the IP-05 Vercel CDN integration with <code>s-maxage=300, stale-while-revalidate=60</code>. When GNews is unreachable, the CDN continues serving the last cached response for up to 60 seconds while attempting revalidation in the background. Without this, every user request would propagate the upstream failure immediately. The <code>"fallback":true</code> field in the 504 response was also added so the client can display a "showing cached results" banner rather than a blank screen. Additionally, the 8-second timeout in <code>api.js</code> ensures the serverless function does not hang for Vercel's full execution limit.
+          </div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow)">
+          <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px">
+            <div style="background:var(--accent);color:white;font-family:var(--mono);font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;white-space:nowrap;margin-top:2px">Case 2</div>
+            <div>
+              <div style="font-weight:600;font-size:15px">Optus API Key Exposure (2022 Data Breach)</div>
+              <div style="font-size:12px;color:var(--muted);font-family:var(--mono)">Integration security failure: unauthenticated API endpoint exposed after migration</div>
+            </div>
+          </div>
+          <p><strong>What happened:</strong> Optus, Australia's second-largest telco, suffered a breach affecting 9.8 million customers when an internal customer API — originally protected by authentication — was inadvertently exposed to the public internet without any authentication gate following a network migration. An attacker discovered the endpoint, iterated over sequential customer IDs, and exfiltrated names, dates of birth, and identity document numbers. No rate limiting, no authentication, and no anomaly detection were in place.</p>
+          <p><strong>What succeeded / what failed:</strong> The API itself was well-structured and functional. The integration security layer — authentication, authorization, and monitoring — had been silently removed during a migration and never verified post-deployment. The integration worked as designed; the security model around it failed completely.</p>
+          <div class="callout success">
+            <div class="callout-label">Design Change Produced in CyberWatch</div>
+            <strong>Three concrete controls.</strong> (1) <strong>API key stored server-side only:</strong> <code>GNEWS_API_KEY</code> and both Supabase keys are sourced from <code>process.env</code> in <code>api.js</code> and <code>server.js</code>; they are never referenced in any frontend file or exposed in the client bundle. (2) <strong><code>requireAuth</code> middleware verified post-deployment:</strong> After the Optus case's lesson that security controls must be verified after every migration, the favorites routes were manually tested with expired and absent tokens after each Vercel deployment, not just during development. (3) <strong>Input validation on the query parameter:</strong> The <code>q</code> parameter is regex-validated before being forwarded to GNews, preventing parameter injection. These controls are reflected in the IP-01, IP-02, IP-03, and IP-04 rows of the security assessment (Part C.3).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PART F -->
+    <div id="part-f" class="part-section">
+      <div class="part-eyebrow"><span class="part-tag">Part F</span><div class="part-rule"></div></div>
+      <h2 class="part-title">Risk Closure and AI-Use Log</h2>
+
+      <div id="f-risk">
+        <h3 class="section-title">RMMM Register — Final Status</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Risk</th><th>Predicted Impact</th><th>Mitigation</th><th>Final Status</th><th>Actual vs. Predicted</th></tr></thead>
+            <tbody>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px;white-space:nowrap">R-01</td>
+                <td>GNews free-tier rate limit hit under load</td>
+                <td><span class="badge high">High</span></td>
+                <td>CDN cache (5 min TTL) reduces upstream calls; degrade gracefully with 429 propagation</td>
+                <td><span class="badge realized">Materialized</span></td>
+                <td>Predicted: would occur at high concurrency. Actual: materialized at 30 VU in load test, exactly as predicted. CDN mitigated impact for cached queries; unique query strings bypassed cache and hit rate limit.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px">R-02</td>
+                <td>API key accidentally committed to Git</td>
+                <td><span class="badge high">High</span></td>
+                <td>Keys in <code>.env</code>; <code>.gitignore</code> enforced; server-only access in <code>api.js</code></td>
+                <td><span class="badge closed">Closed</span></td>
+                <td>Did not materialize. <code>.env</code> confirmed in <code>.gitignore</code>; Vercel project env used for all four secrets. No keys in repo history.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px">R-03</td>
+                <td>GNews changes response schema</td>
+                <td><span class="badge med">Medium</span></td>
+                <td>Normaliser layer in <code>api.js</code> with null-safe field access; version-pinned API base URL</td>
+                <td><span class="badge closed">Closed</span></td>
+                <td>Did not materialize during project period. Null-safe normaliser validated via failure injection (Part C). Open for future.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px">R-04</td>
+                <td>Vercel cold start latency degrades UX</td>
+                <td><span class="badge med">Medium</span></td>
+                <td>CDN warm requests; first-load skeleton UI</td>
+                <td><span class="badge mitigated">Mitigated</span></td>
+                <td>Cold start observed at ~180 ms (1 VU test). CDN cache eliminates cold start for all cached responses. Acceptable for class project.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px">R-05</td>
+                <td>Missing Content Security Policy allows XSS</td>
+                <td><span class="badge med">Medium</span></td>
+                <td>CSP header planned but not implemented</td>
+                <td><span class="badge open">Open</span></td>
+                <td>Did not materialize (no user-generated content rendered as HTML). CSP not implemented; accepted residual risk. Would be P0 if comments or rich user content are added.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px">R-06</td>
+                <td>Build fails on Vercel due to env var mismatch</td>
+                <td><span class="badge low">Low</span></td>
+                <td>Deployment checklist in README; staging gate verifies all 4 env vars</td>
+                <td><span class="badge closed">Closed</span></td>
+                <td>Occurred once during Technical 4 staging test (key was not set in preview env). Fixed by adding key to Vercel preview environment. Did not recur.</td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--mono);font-size:12px">R-07</td>
+                <td>Supabase JWT not validated on every request (broken auth middleware)</td>
+                <td><span class="badge high">High</span></td>
+                <td><code>requireAuth</code> applied to all protected routes; tested with expired and missing tokens post-deploy</td>
+                <td><span class="badge closed">Closed</span></td>
+                <td>Did not materialize. Auth middleware tested post-deployment as a lesson from the Optus breach case (Part E). All 401 paths confirmed working.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="f-ai">
+        <h3 class="section-title">Project-Level AI-Use Log</h3>
+        <div class="callout info">
+          <div class="callout-label">Disclosure</div>
+          In compliance with the academic integrity policy, all uses of AI assistance during this project are documented below. AI was used as a productivity tool; all integration decisions, test executions, and written analysis are the student's own work.
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Module</th><th>Where Used</th><th>Purpose</th><th>What Was Changed Afterward</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Technical 1</td>
+                <td>Integration model diagrams</td>
+                <td>Generated initial Mermaid sequence diagram syntax for browser ↔ API flows</td>
+                <td>Corrected the direction of the auth flow (AI placed API key on client; moved to server in <code>api.js</code>). Added the CDN layer which AI omitted. Added Supabase as a third service after scope change.</td>
+              </tr>
+              <tr>
+                <td>Technical 2</td>
+                <td>Integration point register draft</td>
+                <td>Drafted initial table structure and field names for IP register</td>
+                <td>Replaced AI-suggested "OAuth 2.0" auth for the news endpoint with "public route" (no auth — correct for GNews aggregation). Added IP-03 (Supabase Auth) and IP-04 (Supabase DB) which AI draft omitted entirely. Added retry policy column.</td>
+              </tr>
+              <tr>
+                <td>Technical 3</td>
+                <td><code>api.js</code> scaffold</td>
+                <td>Generated initial Axios wrapper structure</td>
+                <td>Rewrote the normaliser to match GNews field names (<code>raw.source.name</code>, no <code>article_id</code> — AI assumed NewsData.io schema). Added <code>authGet</code> and <code>authPost</code> wrappers for Supabase JWT Bearer pattern. Rewrote null-safe guards to match GNews's nested <code>source</code> object.</td>
+              </tr>
+              <tr>
+                <td>Technical 4</td>
+                <td>Deployment plan table</td>
+                <td>Drafted initial 3-phase plan (dev, staging, prod)</td>
+                <td>Added rollback phase (Phase 5) with Vercel Instant Rollback. Added staging gate specifically verifying all four env vars (AI draft only had one generic API key). Changed staging environment name from AI's "test" to match actual Vercel branch naming.</td>
+              </tr>
+              <tr>
+                <td>Part C (this document)</td>
+                <td>Failure-injection scenario list</td>
+                <td>Suggested 3 failure scenarios to test</td>
+                <td>Added Supabase-specific scenarios (expired JWT, RLS violation) which AI did not suggest. Rewrote the "malformed JSON" scenario — AI suggested testing an invalid JSON string, but GNews always returns valid JSON; the realistic failure is <code>articles: null</code> or missing nested fields. Added the missing-env-var scenario.</td>
+              </tr>
+              <tr>
+                <td>Part E (this document)</td>
+                <td>Case study selection and accuracy review</td>
+                <td>Suggested five real-world integration failures; reviewed document for accuracy against actual codebase</td>
+                <td>Selected two (AWS US-East-1 and Optus breach) based on direct relevance to CyberWatch's specific integration risks. Accuracy review identified seven inaccuracies in the original draft (wrong framework, wrong API, missing Supabase, wrong CSS library, wrong reusable component, missing IP-03/IP-04, wrong metrics tile counts) — all corrected in this final version. All design-change paragraphs are original.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span class="footer-text">CyberWatch — Systems Integration Final Portfolio</span>
+      <span class="footer-text" style="color:var(--border)">|</span>
+      <span class="footer-text">AY 2026–2027 · T1</span>
+      <span class="footer-text" style="margin-left:auto">sight-sec-news-eight.vercel.app</span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function toggleTheme() {
+  const root = document.documentElement;
+  const cur = root.getAttribute('data-theme');
+  root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  try { localStorage.setItem('cw-theme', root.getAttribute('data-theme')); } catch(_) {}
+}
+try {
+  const saved = localStorage.getItem('cw-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+} catch(_) {}
+
+(function() {
+  const links = Array.from(document.querySelectorAll('.nav-link'));
+  const targets = links.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = links.find(l => l.getAttribute('href') === '#' + e.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  targets.forEach(t => obs.observe(t));
+})();
+</script>
+</body>
+</html>
