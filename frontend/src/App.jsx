@@ -220,7 +220,7 @@ export default function App() {
       {view === "submission" && <Submission />}
 
       <footer className="text-center text-muted small py-4">
-        Data from GNews.io· React + Express + Supabase
+        SYSTEMS INTEGRATION AND ARCHITECTURE 2 FINAL PROJECT SUBMISSION | &copy; 2026 SightSec News
       </footer>
     </>
   );

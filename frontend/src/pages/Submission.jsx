@@ -121,7 +121,7 @@ export default function Submission() {
     <main className="container py-4 submission-page">
       <header className="submission-header mb-4">
         <div>
-          <div className="submission-eyebrow">SYSTEMS INTEGRATION AND ARCHITECTURE</div>
+          <div className="submission-eyebrow">SYSTEMS INTEGRATION AND ARCHITECTURE 2</div>
           <h1 className="h2 mb-2">Final Project Submission</h1>
           <p className="text-muted mb-0">
             Evidence and Documentation for Submission 1: AI-assisted work requires disclosure.
