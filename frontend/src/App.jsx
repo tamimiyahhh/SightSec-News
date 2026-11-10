@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Home from "./pages/Home.jsx";
 import Favorites from "./pages/Favorites.jsx";
+import Submission from "./pages/Submission.jsx";
 import AuthPanel from "./components/AuthPanel.jsx";
 import { addFavorite, errorMessage, fetchFavorites, removeFavorite } from "./api.js";
 import { supabase, supabaseConfigured } from "./supabase.js";
@@ -134,6 +135,9 @@ export default function App() {
             <button className={`btn btn-sm ${view === "home" ? "btn-light" : "btn-outline-light"}`} onClick={() => setView("home")}>
               News
             </button>
+            <button className={`btn btn-sm ${view === "submission" ? "btn-light" : "btn-outline-light"}`} onClick={() => setView("submission")}>
+              Project
+            </button>
             <button
               className={`btn btn-sm icon-action${view === "fav" ? " active" : ""}`}
               aria-label={`Favorites, ${favorites.length} saved`}
@@ -213,6 +217,7 @@ export default function App() {
           </div>
         )
       )}
+      {view === "submission" && <Submission />}
 
       <footer className="text-center text-muted small py-4">
         Data from GNews.io· React + Express + Supabase
